@@ -65,10 +65,17 @@
 			fncAddProduct();
 			});
 		});	
+	
+		$(function() {
+			//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
+			//==> 1 과 3 방법 조합 : $("tagName.className:filter함수") 사용함.	
+			 $( "td.ct_btn01:contains('취소')" ).on("click" , function() {
+					//Debug..
+					//alert(  $( "td.ct_btn01:contains('취소')" ).html() );
+					$("form")[0].reset();
+			});
+		});	
 
-function resetData(){
-	document.detailForm.reset();
-}
 -->
 </script>
 </head>

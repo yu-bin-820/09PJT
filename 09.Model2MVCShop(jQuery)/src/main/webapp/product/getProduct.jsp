@@ -24,7 +24,7 @@
 		 $( "td.ct_btn01:contains('구매')" ).on("click" , function() {
 			//Debug..
 			//alert(  $( "td.ct_btn01:contains('구매')" ).html() );
-			self.location = "/product/addPurchaseView?prodNo=${product.prodNo}"
+			self.location = "/purchase/addPurchase?prodNo=${product.prodNo}"
 		});
 		
 		 $( "td.ct_btn01:contains('확인')" ).on("click" , function() {

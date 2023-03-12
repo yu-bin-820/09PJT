@@ -62,6 +62,16 @@
 		//console.log ( $(".ct_list_pop:nth-child(6)" ).html() ); //==> ok
 		//console.log ( $(".ct_list_pop:nth-child(7)" ).html() ); 
 		
+		
+		//배송하기 버튼
+		//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
+		//==> 1 과 3 방법 조합 : $("tagName.className:filter함수") 사용함.	
+		 $( ".ct_list_pop td:nth-child(9)"  ).on("click" , function() {
+			//Debug..
+			//alert(  $( "td.ct_btn01:contains('구매')" ).html() );
+			self.location = "/purchase/updateTranCodeByProd?prodNo="+$(this).children('input:hidden').val()+"&tranCode=2"
+		});
+		
 	})
 	</script>
 </head>
@@ -174,7 +184,28 @@
 			<td></td>
 			<td align="Left">${product.regDate}</td>
 			<td></td>
-			<td align="Left">판매중	</td>
+			
+				<c:choose>
+					<c:when test= "${product.proTranCode=='0'||product.proTranCode==null}">
+					<td align="Left">
+					판매중
+					</c:when>
+					<c:when test= "${product.proTranCode=='1'}">
+					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
+					<input type = 'hidden' id= "prodNo" name = 'prodNo' value='${product.prodNo}'/>
+						구매완료 배송하기
+					</td>		
+					</c:when>
+					<c:when test= "${product.proTranCode=='2' }">
+					<td align="Left">
+					배송중
+					</c:when>
+					<c:when test= "${product.proTranCode=='3'}">
+					<td align="Left">
+					배송완료
+					</c:when>
+				</c:choose>
+			</td>
 		</tr>
 		<tr>
 		<td colspan="11" bgcolor="D6D7D6" height="1"></td>

@@ -15,6 +15,7 @@
 		<result property="price" 		column="PRICE" 				jdbcType="INTEGER" />
 		<result property="fileName" 	column="IMAGE_FILE" 		jdbcType="VARCHAR" />
 		<result property="regDate" 		column="REG_DATE" 			jdbcType="DATE" />
+		<result property="proTranCode" 	column="tran_status_code" 	jdbcType="VARCHAR" />
 	</resultMap>
 	
 	<!-- SQL : INSERT -->
@@ -48,21 +49,22 @@
 	<select  id="getProductList"  parameterType="search"	resultMap="productSelectMap">
 	  	SELECT *
 	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
-	  					FROM		(	SELECT PROD_NO , PROD_NAME , PROD_DETAIL , MANUFACTURE_DAY ,  PRICE ,  IMAGE_FILE , REG_DATE
-											FROM product
+	  					FROM		(	SELECT product.PROD_NO , product.PROD_NAME , product.PROD_DETAIL , product.MANUFACTURE_DAY ,  product.PRICE ,  product.IMAGE_FILE , product.REG_DATE, TRIM(NVL(transaction.tran_status_code,0)) tran_status_code
+											FROM product, transaction
+											<where>
+											product.prod_no=transaction.prod_no(+)
 											<if test="searchCondition != null">
-												<where>
 													<if test="searchCondition == 0 and searchKeyword !='' ">
-										 				PROD_NO like '${searchKeyword}%'
+										 				and product.PROD_NO like '${searchKeyword}%'
 													</if>
 													<if test="searchCondition == 1 and searchKeyword !='' ">
-										 				PROD_NAME like '${searchKeyword}%'
+										 				and product.PROD_NAME like '%${searchKeyword}%'
 													</if>
 													<if test="searchCondition == 2 and searchKeyword !='' ">
-										 				PRICE like '${searchKeyword}%'
+										 				and product.PRICE like '%${searchKeyword}%'
 													</if>
-												</where>
 											</if>
+											</where>
 											ORDER BY PROD_NO ) inner_table
 						WHERE ROWNUM &lt;= #{endRowNum} )
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
@@ -96,6 +98,12 @@
 								</if>
 							</where>
 						</if> ) countTable						
+	 </select>
+	 
+	 <select  id="autocompleteProduct" 	resultType="String">
+	  	SELECT PROD_NAME
+	  	FROM product
+		ORDER BY PROD_NAME
 	 </select>
 	 
 </mapper>

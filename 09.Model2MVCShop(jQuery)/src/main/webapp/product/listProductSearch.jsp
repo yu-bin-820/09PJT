@@ -35,13 +35,13 @@
 		});
 		
 		
-		//==> userId LINK Event 연결처리
+		//==> prodNo LINK Event 연결처리
 		//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
 		//==> 3 과 1 방법 조합 : $(".className tagName:filter함수") 사용함.
-		$( ".ct_list_pop td:nth-child(9n+3)" ).on("click" , function() {
+		$( ".ct_list_pop td:nth-child(3)" ).on("click" , function() {
 				//Debug..
 				//alert(  $( this ).text().trim() );
-				self.location ="/product/getProduct?prodNo="+$("#prodNo").val().trim();
+				self.location ="/product/getProduct?prodNo="+$(this).children('input:hidden').val();
 				
 		});
 		
@@ -158,10 +158,9 @@
 		<c:set var="i" value="${i+1 }" />
 		<tr class="ct_list_pop">
 			<td align="center">${i}</td>
-			<td>
-				<input type = 'hidden' id= "prodNo" name = 'prodNo' value='${product.prodNo}'/>
-			</td>
+			<td></td>
 			<td align="Left">
+							<input type = 'hidden' id= "prodNo" name = 'prodNo' value='${product.prodNo}'/>
 				<!-- ////////////////// jQuery Event 처리로 변경됨 /////////////////////////
 				<a href="/product/updateProduct?prodNo=${product.prodNo}">${product.prodName }</a>
 				////////////////////////////////////////////////////////////////////////////////////////////////// -->
@@ -172,7 +171,22 @@
 			<td></td>
 			<td align="Left">${product.regDate}</td>
 			<td></td>
-			<td align="Left">판매중	</td>
+			<td align="Left">		
+						<c:choose>
+						<c:when test= "${product.proTranCode=='0'||product.proTranCode==null}">
+							판매중
+						</c:when>
+						<c:when test= "${product.proTranCode=='1'}">
+							구매완료 	
+						</c:when>
+						<c:when test= "${product.proTranCode=='2' }">
+							배송중
+						</c:when>
+						<c:when test= "${product.proTranCode=='3'}">
+							배송완료
+						</c:when>
+					</c:choose>
+			</td>
 		</tr>
 		<tr>
 		<td colspan="11" bgcolor="D6D7D6" height="1"></td>
